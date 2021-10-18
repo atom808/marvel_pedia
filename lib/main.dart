@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:marvel_pedia/app/stores/character_store.dart';
+import 'package:marvel_pedia/app/views/character_list_view.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,17 +13,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MarvelPedia',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Colors.red.shade800,
-          secondary: Colors.indigo,
+    return MultiProvider(
+      providers: [
+        Provider<CharacterStore>.value(
+          value: CharacterStore(),
         ),
+      ],
+      child: MaterialApp(
+        title: 'MarvelPedia',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: Colors.red.shade800,
+            secondary: Colors.indigo,
+          ),
+        ),
+        home: const CharacterListView(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

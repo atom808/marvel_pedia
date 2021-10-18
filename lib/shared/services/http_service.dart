@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:crypto/crypto.dart';
 
 import 'package:dio/dio.dart';
 
@@ -18,9 +20,13 @@ class HttpService{
 
   Future<Response> getRequest({required String endPoint}) async{
     Response response;
+    String timeStamp = DateTime.now().toIso8601String();
+    String apiKey = '9e12cab90927d9d68dc623a6cf79f6f2';
+    String privateApiKey = '4994760990560cbf168ff569cf6942b52b076ce9';
+    String md5hash = md5.convert(utf8.encode(timeStamp+privateApiKey+apiKey)).toString();
 
     try {
-      response = await _dio.get(endPoint + '&apikey=' + '9e12cab90927d9d68dc623a6cf79f6f2');
+      response = await _dio.get(endPoint + '?apikey=' + apiKey + '&ts=' + timeStamp + '&hash=' + md5hash);
     } on DioError catch (e) {
       log(e.message);
       throw Exception(e.message);
@@ -35,27 +41,16 @@ class HttpService{
 
     _dio.interceptors.add(InterceptorsWrapper(
         onRequest:(options, handler){
-          // Do something before request is sent
           log('Request on interceptor: ' + options.path.toString());
-          return handler.next(options); //continue
-          // If you want to resolve the request with some custom data，
-          // you can resolve a `Response` object eg: return `dio.resolve(response)`.
-          // If you want to reject the request with a error message,
-          // you can reject a `DioError` object eg: return `dio.reject(dioError)`
+          return handler.next(options);
         },
         onResponse:(response, handler) {
-          // Do something with response data
           log('Response on interceptor: ' + response.data.toString());
-          return handler.next(response); // continue
-          // If you want to reject the request with a error message,
-          // you can reject a `DioError` object eg: return `dio.reject(dioError)`
+          return handler.next(response);
         },
         onError: (DioError error, handler) {
-          // Do something with response error
-          log('Error on interceptor: ' + error.message.toString());
-          return  handler.next(error);//continue
-          // If you want to resolve the request with some custom data，
-          // you can resolve a `Response` object eg: return `dio.resolve(response)`.
+          log('Error on interceptor: ' + error.message.toString() + ' - ' + error.response!.data.toString());
+          return  handler.next(error);
         }
     ));
 

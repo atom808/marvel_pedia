@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:marvel_pedia/shared/widgets/inputs/text_input.dart';
+import 'package:marvel_pedia/app/stores/character_store.dart';
 import 'package:marvel_pedia/shared/widgets/text/title_text.dart';
+import 'package:provider/provider.dart';
 
 class CharacterListView extends StatefulWidget {
   const CharacterListView({Key? key}) : super(key: key);
@@ -10,8 +11,11 @@ class CharacterListView extends StatefulWidget {
 }
 
 class _CharacterListViewState extends State<CharacterListView> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
+    var _store = Provider.of<CharacterStore>(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -50,11 +54,28 @@ class _CharacterListViewState extends State<CharacterListView> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return Container();
-          }, childCount: 10))
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: FutureBuilder(
+              future: _store.fetchList(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(snapshot.data[index]!.toString()),
+                      );
+                    },
+                  );
+                } else if (snapshot.connectionState == ConnectionState.waiting){
+                  return const Center(child: CircularProgressIndicator(),);
+                } else {
+                  return const Center(child: Text('Sem dados registrados'),);
+                }
+              },
+            ),
+          )
         ],
       ),
     );
