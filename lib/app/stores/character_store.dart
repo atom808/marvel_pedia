@@ -7,8 +7,12 @@ part 'character_store.g.dart';
 class CharacterStore = _CharacterStoreBase with _$CharacterStore;
 abstract class _CharacterStoreBase with Store {
 
+  // @observable
+  // int offset = 1;
+
   @action
-  Future<List<Character>> fetchList() async {
-    return CharacterRepository().fetchCharacterList();
+  Future<List<Character>> fetchList({int? offset}) async {
+    List<Character> list = await CharacterRepository().fetchCharacterList(offset: offset);
+    return list;
   }
 }

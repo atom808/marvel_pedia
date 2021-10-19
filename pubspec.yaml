@@ -38,6 +38,8 @@ dependencies:
   flutter_mobx: ^2.0.2
   provider: ^6.0.1
   dio: ^4.0.0
+  pagination_view: ^2.0.0
+  flutter_pagewise: ^2.0.1
 
 dev_dependencies:
   flutter_test:

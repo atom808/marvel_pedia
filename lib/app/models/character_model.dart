@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-
 class Character{
-  /*
+  /* Campos da API
   * id (int, optional): The unique ID of the character resource.,
     name (string, optional): The name of the character.,
     description (string, optional): A short bio or description of the character.,
@@ -19,12 +17,14 @@ class Character{
   final String name;
   final String description;
   final dynamic thumbnail;
+  final dynamic comicsList;
 
   Character({
     required this.id,
     required this.name,
     required this.description,
-    required this.thumbnail
+    required this.thumbnail,
+    required this.comicsList,
   });
 
 
@@ -34,6 +34,7 @@ class Character{
       name: json['name'] as String,
       description: json['description'] as String,
       thumbnail: json['thumbnail'] as dynamic,
+      comicsList: json['comics'] as dynamic,
     );
   }
 

@@ -18,15 +18,23 @@ class HttpService{
   }
 
 
-  Future<Response> getRequest({required String endPoint}) async{
+  Future<Response> getRequest({required String endPoint, int? offset}) async{
     Response response;
     String timeStamp = DateTime.now().toIso8601String();
     String apiKey = '9e12cab90927d9d68dc623a6cf79f6f2';
     String privateApiKey = '4994760990560cbf168ff569cf6942b52b076ce9';
     String md5hash = md5.convert(utf8.encode(timeStamp+privateApiKey+apiKey)).toString();
+    offset ??= 0;
 
     try {
-      response = await _dio.get(endPoint + '?apikey=' + apiKey + '&ts=' + timeStamp + '&hash=' + md5hash);
+      response = await _dio.get(
+          endPoint +
+              '?apikey=' + apiKey +
+              '&ts=' + timeStamp +
+              '&hash=' + md5hash +
+              '&offset=' + offset.toString() +
+              '&limit=' + '20'
+      );
     } on DioError catch (e) {
       log(e.message);
       throw Exception(e.message);
