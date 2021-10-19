@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:marvel_pedia/app/stores/character_store.dart';
 import 'package:marvel_pedia/shared/widgets/text/title_text.dart';
@@ -59,12 +61,13 @@ class _CharacterListViewState extends State<CharacterListView> {
             child: FutureBuilder(
               future: _store.fetchList(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                if(snapshot.connectionState == ConnectionState.done) {
+                  log('Snapshot data: ' + snapshot.data.toString());
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
-                        title: Text(snapshot.data[index]!.toString()),
+                        title: Text(snapshot.data[index].name.toString()),
                       );
                     },
                   );
