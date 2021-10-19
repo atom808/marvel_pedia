@@ -34,6 +34,9 @@ class _CharacterDetailsViewState extends State<CharacterDetailsView> {
               child: Hero(
                 tag: {widget.character.id.toString()},
                 child: Image(
+                  errorBuilder: (BuildContext context, Object object, _) {
+                    return const Center(child: Text('Sem\nimagem', textAlign: TextAlign.center, style: TextStyle(fontSize: 10),),);
+                  },
                   fit: BoxFit.cover,
                   image: widget.character.thumbnail['path'] != null ? NetworkImage(widget.character.thumbnail['path'].toString() + '.jpg') : const NetworkImage('https://wp-content.bluebus.com.br/wp-content/uploads/2017/03/31142426/twitter-novo-avatar-padrao-2017-bluebus-660x440.png'),
                 ),

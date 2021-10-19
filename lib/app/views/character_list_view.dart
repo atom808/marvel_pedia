@@ -80,6 +80,9 @@ class _CharacterListViewState extends State<CharacterListView> {
                           height: 80,
                           width: 80,
                           fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object object, _) {
+                            return const Center(child: Text('Sem\nimagem', textAlign: TextAlign.center, style: TextStyle(fontSize: 10),),);
+                          },
                           image: character.thumbnail['path'] != null ? NetworkImage(character.thumbnail['path'].toString() + '.jpg') : const NetworkImage('https://wp-content.bluebus.com.br/wp-content/uploads/2017/03/31142426/twitter-novo-avatar-padrao-2017-bluebus-660x440.png'),
                         ),
                       ),
@@ -90,7 +93,7 @@ class _CharacterListViewState extends State<CharacterListView> {
               );
             },
             pageFuture: (pageIndex) =>
-                _store.fetchList(offset: pageIndex! * 20),
+                Future.delayed(Duration(seconds: pageIndex! % 2), () => _store.fetchList(offset: pageIndex * 20)),
           )
 
 
